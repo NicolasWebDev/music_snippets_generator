@@ -2,14 +2,15 @@ from pytest import mark
 from src.interval_generator.note import (
     is_flat,
     is_sharp,
-    interval_number_from_c4,
-    interval_number_between,
+    diatonic_distance_from_c4,
+    diatonic_distance_between,
+    harmonic_distance_from_c4,
 )
 
 
 @mark.parametrize(
     "test_note,expected",
-    [("ab", True), ("a", False), ("b", False), ("bb", True), ("bs", False)],
+    [("af", True), ("a", False), ("b", False), ("bf", True), ("bs", False)],
 )
 def test_is_flat(test_note, expected):
     assert is_flat(test_note) == expected
@@ -17,7 +18,7 @@ def test_is_flat(test_note, expected):
 
 @mark.parametrize(
     "test_note,expected",
-    [("ab", False), ("a", False), ("b", False), ("bb", False), ("bs", True)],
+    [("af", False), ("a", False), ("b", False), ("bf", False), ("bs", True)],
 )
 def test_is_sharp(test_note, expected):
     assert is_sharp(test_note) == expected
@@ -31,7 +32,7 @@ def test_is_sharp(test_note, expected):
         ("ef", 3),
         ("fs", 4),
         ("g", 5),
-        ("ab", 6),
+        ("af", 6),
         ("bs", 7),
         ("c'", 8),
         ("d'", 9),
@@ -40,14 +41,14 @@ def test_is_sharp(test_note, expected):
         ("c''", 15),
     ],
 )
-def test_interval_number_from_c4(test_note, expected):
-    assert interval_number_from_c4(test_note) == expected
+def test_diatonic_distance_from_c4(test_note, expected):
+    assert diatonic_distance_from_c4(test_note) == expected
 
 
 @mark.parametrize(
     "test_note1,test_note2,expected",
     [
-        ("cb", "cs", 1),
+        ("cf", "cs", 1),
         ("c", "c", 1),
         ("c", "c'", 8),
         ("c", "c''", 15),
@@ -57,5 +58,23 @@ def test_interval_number_from_c4(test_note, expected):
         ("d", "c", -2),
     ],
 )
-def test_interval_number_between(test_note1, test_note2, expected):
-    assert interval_number_between(test_note1, test_note2) == expected
+def test_diatonic_distance_between(test_note1, test_note2, expected):
+    assert diatonic_distance_between(test_note1, test_note2) == expected
+
+
+@mark.parametrize(
+    "test_note,expected",
+    [
+        ("c", 0),
+        ("d", 2),
+        ("e", 4),
+        ("f", 5),
+        ("fs", 6),
+        ("ff", 4),
+        ("c'", 12),
+        ("c'''", 36),
+        ("d'''", 38),
+    ],
+)
+def test_harmonic_distance_from_c4(test_note, expected):
+    assert harmonic_distance_from_c4(test_note) == expected
