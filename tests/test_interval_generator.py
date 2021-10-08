@@ -1,5 +1,5 @@
 from pytest import mark
-from src.interval_generator.note import (
+from src.interval_generator.interval_generator import (
     is_flat,
     is_sharp,
     interval_number_from_c4,
