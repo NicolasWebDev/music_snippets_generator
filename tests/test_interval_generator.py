@@ -1,25 +1,30 @@
 from pytest import mark
-from src.interval_generator.note import is_flat, is_sharp, interval_number_from_c4
+from src.interval_generator.note import (
+    is_flat,
+    is_sharp,
+    interval_number_from_c4,
+    interval_number_between,
+)
 
 
 @mark.parametrize(
-    "test_input,expected",
+    "test_note,expected",
     [("ab", True), ("a", False), ("b", False), ("bb", True), ("bs", False)],
 )
-def test_is_flat(test_input, expected):
-    assert is_flat(test_input) == expected
+def test_is_flat(test_note, expected):
+    assert is_flat(test_note) == expected
 
 
 @mark.parametrize(
-    "test_input,expected",
+    "test_note,expected",
     [("ab", False), ("a", False), ("b", False), ("bb", False), ("bs", True)],
 )
-def test_is_sharp(test_input, expected):
-    assert is_sharp(test_input) == expected
+def test_is_sharp(test_note, expected):
+    assert is_sharp(test_note) == expected
 
 
 @mark.parametrize(
-    "test_input,expected",
+    "test_note,expected",
     [
         ("c", 1),
         ("d", 2),
@@ -35,5 +40,22 @@ def test_is_sharp(test_input, expected):
         ("c''", 15),
     ],
 )
-def test_interval_number_from_c4(test_input, expected):
-    assert interval_number_from_c4(test_input) == expected
+def test_interval_number_from_c4(test_note, expected):
+    assert interval_number_from_c4(test_note) == expected
+
+
+@mark.parametrize(
+    "test_note1,test_note2,expected",
+    [
+        ("cb", "cs", 1),
+        ("c", "c", 1),
+        ("c", "c'", 8),
+        ("c", "c''", 15),
+        ("d", "d", 1),
+        ("ef", "c'", 6),
+        ("c'", "ef", -6),
+        ("d", "c", -2),
+    ],
+)
+def test_interval_number_between(test_note1, test_note2, expected):
+    assert interval_number_between(test_note1, test_note2) == expected
