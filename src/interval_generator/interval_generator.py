@@ -70,5 +70,6 @@ def generate_flat_score_files(flat_notes):
                     generate_score_file(first_note, second_note, interval)
 
 
-generate_non_flat_score_files(NON_FLAT_NOTES)
-generate_flat_score_files(FLAT_NOTES)
+def __main__():
+    generate_non_flat_score_files(NON_FLAT_NOTES)
+    generate_flat_score_files(FLAT_NOTES)
