@@ -4,9 +4,6 @@ version = "0.1.0"
 description = "Generate images of musical intervals for importing to anki."
 authors = ["Nicolas Schmitt <info@nicolaswebdev.com>"]
 
-[tool.poetry.scripts]
-start = "interval_generator.interval_generator:__main__"
-
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest-watch = "^4.2.0"
