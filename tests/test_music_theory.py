@@ -1,4 +1,4 @@
-from pytest import mark, param
+from pytest import mark
 from src.interval_generator.music_theory import (
     simplify_interval_number,
     have_opposite_accidentals,

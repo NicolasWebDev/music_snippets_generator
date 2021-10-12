@@ -101,7 +101,6 @@ def have_opposite_accidentals(first_note, second_note):
 
 def interval_between(first_note, second_note):
     interval_number = interval_number_between(first_note, second_note)
-    is_descending_interval = harmonic_distance_between(first_note, second_note) < 0
     harmonic_distance = harmonic_distance_between(first_note, second_note)
     simple_interval_number = simplify_interval_number(abs(interval_number))
     index = (
@@ -123,6 +122,7 @@ def interval_between(first_note, second_note):
         f"[PdAmM]+(?={simple_interval_number})",
         possible_intervals,
     )[0]
+    is_descending_interval = harmonic_distance_between(first_note, second_note) < 0
     return f"{'-' if is_descending_interval else ''}{quality}{abs(interval_number)}"
 
 
