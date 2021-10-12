@@ -1,6 +1,7 @@
 from pathlib import Path
 from functools import partial
 from subprocess import run, DEVNULL
+from tqdm import tqdm
 from .music_theory import (
     have_opposite_accidentals,
     CHROMATIC_NOTES,
@@ -10,6 +11,7 @@ from .music_theory import (
 )
 
 CARDS_DIRECTORY_PATH = "cards/dyad_scores"
+CARDS_LIMIT = 100
 
 
 run_command_silently = partial(run, check=True, stdout=DEVNULL, stderr=DEVNULL)
@@ -93,13 +95,20 @@ def _pdf2svg(lilypond_score_filepath):
     )
 
 
-def _generate_anki_cards_with_images_of_dyads():
+def generate_anki_cards_with_images_of_dyads():
     score_directory = Path(CARDS_DIRECTORY_PATH)
     score_directory.mkdir(parents=True, exist_ok=True)
-    for first_note, second_note in _generate_ascending_dyads_on_2_octaves()[0:10]:
+    for first_note, second_note in tqdm(
+        _generate_ascending_dyads_on_2_octaves()[:CARDS_LIMIT],
+        desc="Creating the dyads",
+    ):
         lilypond_score_filepath = score_directory.joinpath(
             generate_score_filename(first_note, second_note)
         )
         _generate_dyad_score(first_note, second_note, lilypond_score_filepath)
         _ly2pdf(lilypond_score_filepath)
         _pdf2svg(lilypond_score_filepath)
+
+
+if __name__ == "__main__":
+    generate_anki_cards_with_images_of_dyads()
