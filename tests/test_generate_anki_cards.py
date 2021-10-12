@@ -24,6 +24,17 @@ def test_ly2pdf(tmp_path):
     # Can't compare that the pdf created is the same than a fixture, because
     # the ModifyDate is always different.
     assert lilypond_score_fixture_path.with_suffix(".pdf").is_file()
+    for file_should_be_deleted in [
+        "lilypond_score_fixture-1.eps",
+        "lilypond_score_fixture-1.pdf",
+        "lilypond_score_fixture-systems.count",
+        "lilypond_score_fixture-systems.texi",
+        "lilypond_score_fixture-systems.tex",
+    ]:
+        assert not lilypond_score_fixture_path.with_name(
+            file_should_be_deleted
+        ).is_file()
+    assert len(list(tmp_path.iterdir())) == 2
 
 
 def test_pdf2svg(tmp_path):

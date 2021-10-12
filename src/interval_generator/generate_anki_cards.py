@@ -73,6 +73,24 @@ def _generate_dyad_score(first_note, second_note, lilypond_score_filepath):
         file.write(generate_lilypond_content(first_note, second_note))
 
 
+def _clean_lilypond_intermediate_files(lilypond_score_filepath):
+    run_command_silently(
+        [
+            "rm",
+            *[
+                f"{lilypond_score_filepath.with_suffix('')}{suffix}"
+                for suffix in [
+                    "-1.eps",
+                    "-1.pdf",
+                    "-systems.count",
+                    "-systems.tex",
+                    "-systems.texi",
+                ]
+            ],
+        ]
+    )
+
+
 def _ly2pdf(lilypond_score_filepath):
     run_command_silently(
         [
@@ -81,6 +99,7 @@ def _ly2pdf(lilypond_score_filepath):
             lilypond_score_filepath,
         ],
     )
+    _clean_lilypond_intermediate_files(lilypond_score_filepath)
 
 
 def _pdf2svg(lilypond_score_filepath):
