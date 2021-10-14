@@ -11,7 +11,7 @@ from .music_theory import (
 )
 
 CARDS_DIRECTORY_PATH = "cards/dyad_scores"
-CARDS_LIMIT = 100
+CARDS_LIMIT = 10000000
 
 
 run_command_silently = partial(run, check=True, stdout=DEVNULL, stderr=DEVNULL)
@@ -109,8 +109,19 @@ def _pdf2svg(lilypond_score_filepath):
             "--pdf-poppler",
             "--export-type=svg",
             f"--export-filename={lilypond_score_filepath.with_suffix('.svg')}",
-            str(lilypond_score_filepath.with_suffix(".pdf")),
+            lilypond_score_filepath.with_suffix(".pdf"),
         ],
+    )
+
+
+def _negate_svg(lilypond_score_filepath):
+    run_command_silently(
+        [
+            "inkscape",
+            "--actions=org.inkscape.color.negative.noprefs;FileSave;FileClose",
+            "--batch-process",
+            lilypond_score_filepath.with_suffix(".svg"),
+        ]
     )
 
 
@@ -127,6 +138,7 @@ def generate_anki_cards_with_images_of_dyads():
         _generate_dyad_score(first_note, second_note, lilypond_score_filepath)
         _ly2pdf(lilypond_score_filepath)
         _pdf2svg(lilypond_score_filepath)
+        _negate_svg(lilypond_score_filepath)
 
 
 if __name__ == "__main__":

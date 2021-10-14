@@ -1,10 +1,10 @@
 from filecmp import cmp
-from pathlib import Path
 from shutil import copy
 from pytest import mark
 from src.interval_generator.generate_anki_cards import (
     _generate_ascending_dyads_on_2_octaves,
     _pdf2svg,
+    _negate_svg,
     _flatten,
     _ly2pdf,
 )
@@ -58,3 +58,11 @@ def test_generate_ascending_dyads_on_2_octaves():
 )
 def test_flatten(test_array, expected):
     assert _flatten(test_array) == expected
+
+
+def test_negate_svg(tmp_path):
+    copy("tests/fixtures/asas_P1.svg", tmp_path / "asas_P1_negated.svg")
+
+    _negate_svg(tmp_path / "asas_P1_negated.svg")
+
+    assert cmp(tmp_path / "asas_P1_negated.svg", "tests/fixtures/asas_P1_negated.svg")
