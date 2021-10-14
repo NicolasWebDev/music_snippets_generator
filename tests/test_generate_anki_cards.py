@@ -9,31 +9,23 @@ from src.interval_generator.generate_anki_cards import (
     _ly2pdf,
 )
 
-SCORE_CONTENT = (
-    r'\include "lilypond-book-preamble.ly" \language "english"'
-    r" { \omit Staff.TimeSignature as as }"
-)
-
 
 def test_ly2pdf(tmp_path):
-    lilypond_score_fixture_path = tmp_path / "lilypond_score_fixture.ly"
-    lilypond_score_fixture_path.write_text(SCORE_CONTENT)
+    copy("tests/fixtures/asas_P1.ly", tmp_path)
 
-    _ly2pdf(lilypond_score_fixture_path)
+    _ly2pdf(tmp_path / "asas_P1.ly")
 
     # Can't compare that the pdf created is the same than a fixture, because
     # the ModifyDate is always different.
-    assert lilypond_score_fixture_path.with_suffix(".pdf").is_file()
+    assert (tmp_path / "asas_P1.pdf").is_file()
     for file_should_be_deleted in [
-        "lilypond_score_fixture-1.eps",
-        "lilypond_score_fixture-1.pdf",
-        "lilypond_score_fixture-systems.count",
-        "lilypond_score_fixture-systems.texi",
-        "lilypond_score_fixture-systems.tex",
+        "asas_P1-1.eps",
+        "asas_P1-1.pdf",
+        "asas_P1-systems.count",
+        "asas_P1-systems.texi",
+        "asas_P1-systems.tex",
     ]:
-        assert not lilypond_score_fixture_path.with_name(
-            file_should_be_deleted
-        ).is_file()
+        assert not (tmp_path / file_should_be_deleted).is_file()
     assert len(list(tmp_path.iterdir())) == 2
 
 
