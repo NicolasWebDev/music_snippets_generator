@@ -1,4 +1,6 @@
 from pathlib import Path
+from re import match
+from difflib import unified_diff
 from functools import partial
 from subprocess import run, DEVNULL
 from tqdm import tqdm
@@ -112,6 +114,27 @@ def _pdf2svg(lilypond_score_filepath):
             lilypond_score_filepath.with_suffix(".pdf"),
         ],
     )
+
+
+def _negate_svgs_in_directory(directory):
+    for svg_file_path in directory.glob("*.svg"):
+        _negate_svg(svg_file_path)
+
+
+def _compare_svg_files(svg_file_path1, svg_file_path2):
+    """Compare if two svg files are identical, ignoring their filename."""
+    with open(svg_file_path1) as svg_file1:
+        with open(svg_file_path2) as svg_file2:
+            different_lines = [
+                line
+                for line in unified_diff(svg_file1.readlines(), svg_file2.readlines())
+                if match(r"^[+-][^+-]", line)
+            ]
+            return not [
+                different_line
+                for different_line in different_lines
+                if "sodipodi:docname" not in different_line
+            ]
 
 
 def _negate_svg(lilypond_score_filepath):
