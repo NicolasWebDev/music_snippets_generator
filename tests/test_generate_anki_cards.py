@@ -1,5 +1,4 @@
-from filecmp import cmp
-from shutil import copy, copytree, move
+from shutil import copy, copytree
 from pytest import mark
 from src.interval_generator.generate_anki_cards import (
     _generate_ascending_dyads_on_2_octaves,
