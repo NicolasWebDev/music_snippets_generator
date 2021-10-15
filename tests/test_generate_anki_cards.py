@@ -1,26 +1,12 @@
-from shutil import copy, copytree
+from shutil import copy
+from filecmp import cmp
 from pytest import mark
 from src.interval_generator.generate_anki_cards import (
     _generate_ascending_dyads_on_2_octaves,
-    _negate_svgs_in_directory,
     _pdf2svg,
     _flatten,
     _ly2pdf,
-    _compare_svg_files,
 )
-
-
-def test_compare_svg_files():
-    assert _compare_svg_files(
-        "tests/fixtures/svg/asas_P1.svg", "tests/fixtures/svg/asas_P1.svg"
-    )
-    assert not _compare_svg_files(
-        "tests/fixtures/svg/asas_P1.svg", "tests/fixtures/svg/asa--_d15.svg"
-    )
-    assert _compare_svg_files(
-        "tests/fixtures/asas_P1_negated.svg",
-        "tests/fixtures/asas_P1_negated_copy.svg",
-    )
 
 
 def test_ly2pdf(tmp_path):
@@ -47,9 +33,7 @@ def test_pdf2svg(tmp_path):
 
     _pdf2svg(tmp_path / "asas_P1.pdf")
 
-    assert _compare_svg_files(
-        tmp_path / "asas_P1.svg", "tests/fixtures/svg/asas_P1.svg"
-    )
+    assert cmp(tmp_path / "asas_P1.svg", "tests/fixtures/svg/asas_P1.svg")
 
 
 def test_generate_ascending_dyads_on_2_octaves():
@@ -65,16 +49,3 @@ def test_generate_ascending_dyads_on_2_octaves():
 )
 def test_flatten(test_array, expected):
     assert _flatten(test_array) == expected
-
-
-def test_negate_svgs_in_directory(tmp_path):
-    copytree("tests/fixtures/svg", tmp_path, dirs_exist_ok=True)
-
-    _negate_svgs_in_directory(tmp_path)
-
-    assert _compare_svg_files(
-        tmp_path / "asas_P1.svg", "tests/fixtures/asas_P1_negated.svg"
-    )
-    assert _compare_svg_files(
-        tmp_path / "asa--_d15.svg", "tests/fixtures/asa--_d15_negated.svg"
-    )

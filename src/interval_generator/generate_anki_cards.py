@@ -1,6 +1,4 @@
 from pathlib import Path
-from re import match
-from difflib import unified_diff
 from functools import partial
 from subprocess import run, DEVNULL
 from tqdm import tqdm
@@ -54,10 +52,25 @@ def _generate_ascending_dyads_on_2_octaves():
 
 
 def generate_lilypond_content(first_note, second_note):
-    return (
-        r'\include "lilypond-book-preamble.ly" \language "english" '
-        rf"{{ \omit Staff.TimeSignature {first_note} {second_note} }}"
-    )
+    """
+    The content to change all the colors come from this address:
+    https://lsr.di.unimi.it/LSR/Search?q=setting+a+color
+    """
+    return rf"""
+        #(define (override-color-for-all-grobs color)
+            (lambda (context)
+                (let loop ((x all-grob-descriptions))
+                    (if (not (null? x))
+                        (let ((grob-name (caar x)))
+                            (ly:context-pushpop-property context grob-name 'color color)
+                            (loop (cdr x)))))))
+
+        \include "lilypond-book-preamble.ly" \language "english" {{
+            \applyContext #(override-color-for-all-grobs (x11-color 'white))
+            \omit Staff.TimeSignature
+            {first_note} {second_note}
+        }}
+        """
 
 
 def generate_score_filename(first_note, second_note):
@@ -116,33 +129,6 @@ def _pdf2svg(lilypond_score_filepath):
     )
 
 
-def _negate_svgs_in_directory(directory):
-    run_command_silently(
-        [
-            "inkscape",
-            "--actions=org.inkscape.color.negative.noprefs;FileSave;FileClose",
-            "--batch-process",
-            *directory.glob("*.svg"),
-        ]
-    )
-
-
-def _compare_svg_files(svg_file_path1, svg_file_path2):
-    """Compare if two svg files are identical, ignoring their filename."""
-    with open(svg_file_path1, encoding="utf8") as svg_file1:
-        with open(svg_file_path2, encoding="utf8") as svg_file2:
-            different_lines = [
-                line
-                for line in unified_diff(svg_file1.readlines(), svg_file2.readlines())
-                if match(r"^[+-][^+-]", line)
-            ]
-            return not [
-                different_line
-                for different_line in different_lines
-                if "sodipodi:docname" not in different_line
-            ]
-
-
 def generate_anki_cards_with_images_of_dyads():
     score_directory = Path(CARDS_DIRECTORY_PATH)
     score_directory.mkdir(parents=True, exist_ok=True)
@@ -156,7 +142,6 @@ def generate_anki_cards_with_images_of_dyads():
         _generate_dyad_score(first_note, second_note, lilypond_score_filepath)
         _ly2pdf(lilypond_score_filepath)
         _pdf2svg(lilypond_score_filepath)
-    _negate_svgs_in_directory(score_directory)
 
 
 if __name__ == "__main__":
