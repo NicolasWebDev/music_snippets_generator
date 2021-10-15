@@ -13,7 +13,7 @@ from .music_theory import (
 )
 
 CARDS_DIRECTORY_PATH = "cards/dyad_scores"
-CARDS_LIMIT = 10000000
+CARDS_LIMIT = 100
 
 
 run_command_silently = partial(run, check=True, stdout=DEVNULL, stderr=DEVNULL)
@@ -117,14 +117,20 @@ def _pdf2svg(lilypond_score_filepath):
 
 
 def _negate_svgs_in_directory(directory):
-    for svg_file_path in directory.glob("*.svg"):
-        _negate_svg(svg_file_path)
+    run_command_silently(
+        [
+            "inkscape",
+            "--actions=org.inkscape.color.negative.noprefs;FileSave;FileClose",
+            "--batch-process",
+            *directory.glob("*.svg"),
+        ]
+    )
 
 
 def _compare_svg_files(svg_file_path1, svg_file_path2):
     """Compare if two svg files are identical, ignoring their filename."""
-    with open(svg_file_path1) as svg_file1:
-        with open(svg_file_path2) as svg_file2:
+    with open(svg_file_path1, encoding="utf8") as svg_file1:
+        with open(svg_file_path2, encoding="utf8") as svg_file2:
             different_lines = [
                 line
                 for line in unified_diff(svg_file1.readlines(), svg_file2.readlines())
@@ -135,17 +141,6 @@ def _compare_svg_files(svg_file_path1, svg_file_path2):
                 for different_line in different_lines
                 if "sodipodi:docname" not in different_line
             ]
-
-
-def _negate_svg(lilypond_score_filepath):
-    run_command_silently(
-        [
-            "inkscape",
-            "--actions=org.inkscape.color.negative.noprefs;FileSave;FileClose",
-            "--batch-process",
-            lilypond_score_filepath.with_suffix(".svg"),
-        ]
-    )
 
 
 def generate_anki_cards_with_images_of_dyads():
@@ -161,7 +156,7 @@ def generate_anki_cards_with_images_of_dyads():
         _generate_dyad_score(first_note, second_note, lilypond_score_filepath)
         _ly2pdf(lilypond_score_filepath)
         _pdf2svg(lilypond_score_filepath)
-        _negate_svg(lilypond_score_filepath)
+    _negate_svgs_in_directory(score_directory)
 
 
 if __name__ == "__main__":
