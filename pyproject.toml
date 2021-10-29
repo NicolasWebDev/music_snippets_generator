@@ -13,6 +13,10 @@ pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
 tdqm = "^0.0.1"
 taskipy = "^1.9.0"
+click = "^8.0.3"
+
+[tool.poetry.scripts]
+start = "src.interval_generator.generate_anki_cards:main"
 
 [tool.taskipy.tasks]
 test = "pytest"

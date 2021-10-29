@@ -1,4 +1,5 @@
 from pathlib import Path
+import click
 from functools import partial
 from subprocess import run, DEVNULL
 from tqdm import tqdm
@@ -129,6 +130,16 @@ def _pdf2svg(lilypond_score_filepath):
     )
 
 
+@click.group(help="Creates snippets of common musical constructs.")
+def cli():
+    pass
+
+
+@cli.command()
+def dyads():
+    generate_anki_cards_with_images_of_dyads()
+
+
 def generate_anki_cards_with_images_of_dyads():
     score_directory = Path(CARDS_DIRECTORY_PATH)
     score_directory.mkdir(parents=True, exist_ok=True)
@@ -144,5 +155,5 @@ def generate_anki_cards_with_images_of_dyads():
         _pdf2svg(lilypond_score_filepath)
 
 
-if __name__ == "__main__":
-    generate_anki_cards_with_images_of_dyads()
+def main():
+    cli(prog_name="interval-generator")
