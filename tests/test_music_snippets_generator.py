@@ -1,10 +1,8 @@
 from shutil import copy
 from filecmp import cmp
-from pytest import mark
 from src.music_snippets_generator.music_snippets_generator import (
     _generate_ascending_dyads_on_2_octaves,
     _pdf2svg,
-    _flatten,
     _ly2pdf,
 )
 
@@ -38,14 +36,3 @@ def test_pdf2svg(tmp_path):
 
 def test_generate_ascending_dyads_on_2_octaves():
     assert len(_generate_ascending_dyads_on_2_octaves()) == 1494
-
-
-@mark.parametrize(
-    "test_array,expected",
-    [
-        ([[1], [2], [3]], [1, 2, 3]),
-        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4, 5, 6, 7, 8, 9]),
-    ],
-)
-def test_flatten(test_array, expected):
-    assert _flatten(test_array) == expected

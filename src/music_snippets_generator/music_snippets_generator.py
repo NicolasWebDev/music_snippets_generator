@@ -1,8 +1,9 @@
 from pathlib import Path
-import click
 from functools import partial
 from subprocess import run, DEVNULL
+import click
 from tqdm import tqdm
+from .utils import flatten
 from .music_theory import (
     have_opposite_accidentals,
     CHROMATIC_NOTES,
@@ -18,12 +19,8 @@ CARDS_LIMIT = 1000000000000
 run_command_silently = partial(run, check=True, stdout=DEVNULL, stderr=DEVNULL)
 
 
-def _flatten(list_):
-    return [item for sublist in list_ for item in sublist]
-
-
 def _generate_saxophone_notes():
-    return _flatten(
+    return flatten(
         [
             ["as", "bf", "b"],
             (f"{note}'" for note in CHROMATIC_NOTES),
