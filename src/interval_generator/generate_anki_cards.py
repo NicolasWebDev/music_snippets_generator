@@ -11,7 +11,7 @@ from .music_theory import (
 )
 
 CARDS_DIRECTORY_PATH = "cards/dyad_scores"
-CARDS_LIMIT = 100
+CARDS_LIMIT = 1000000000000
 
 
 run_command_silently = partial(run, check=True, stdout=DEVNULL, stderr=DEVNULL)
