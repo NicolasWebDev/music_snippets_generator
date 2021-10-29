@@ -1,7 +1,7 @@
 from shutil import copy
 from filecmp import cmp
 from pytest import mark
-from src.interval_generator.generate_anki_cards import (
+from src.music_snippets_generator.music_snippets_generator import (
     _generate_ascending_dyads_on_2_octaves,
     _pdf2svg,
     _flatten,

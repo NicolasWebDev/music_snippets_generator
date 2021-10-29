@@ -156,4 +156,4 @@ def generate_anki_cards_with_images_of_dyads():
 
 
 def main():
-    cli(prog_name="interval-generator")
+    cli(prog_name="music-snippets-generator")

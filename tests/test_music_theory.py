@@ -1,5 +1,5 @@
 from pytest import mark
-from src.interval_generator.music_theory import (
+from src.music_snippets_generator.music_theory import (
     simplify_interval_number,
     have_opposite_accidentals,
     is_flat,
