@@ -1,5 +1,4 @@
 from pathlib import Path
-import click
 from tqdm import tqdm
 from .utils import flatten
 from .music_to_pdf import generate_dyad_snippet
@@ -45,16 +44,6 @@ def _generate_ascending_dyads_on_2_octaves():
     ]
 
 
-@click.group(help="Creates snippets of common musical constructs.")
-def cli():
-    pass
-
-
-@cli.command()
-def dyads():
-    generate_anki_cards_with_images_of_dyads()
-
-
 def generate_anki_cards_with_images_of_dyads():
     score_directory = Path(CARDS_DIRECTORY_PATH)
     score_directory.mkdir(parents=True, exist_ok=True)
@@ -63,7 +52,3 @@ def generate_anki_cards_with_images_of_dyads():
         desc="Creating the dyads",
     ):
         generate_dyad_snippet(score_directory, first_note, second_note)
-
-
-def main():
-    cli(prog_name="music-snippets-generator")
