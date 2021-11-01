@@ -6,14 +6,14 @@ authors = ["Nicolas Schmitt <info@nicolaswebdev.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pytest-watch = "^4.2.0"
+tdqm = "^0.0.1"
+click = "^8.0.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
+pytest-watch = "^4.2.0"
 pytest-cov = "^3.0.0"
-tdqm = "^0.0.1"
 taskipy = "^1.9.0"
-click = "^8.0.3"
 
 [tool.poetry.scripts]
 start = "src.music_snippets_generator.music_snippets_generator:main"
