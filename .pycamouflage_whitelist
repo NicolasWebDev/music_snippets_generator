@@ -1,0 +1,2 @@
+src.music_snippets_generator.cli:cli
+src.music_snippets_generator.cli:main

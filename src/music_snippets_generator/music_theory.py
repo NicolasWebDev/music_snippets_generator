@@ -45,34 +45,34 @@ INTERVALS = {
 }
 
 
-def is_flat(note):
+def _is_flat(note):
     return bool(match(r"^.f'*$", note))
 
 
-def is_sharp(note):
+def _is_sharp(note):
     return bool(match(r"^.s'*$", note))
 
 
-def interval_number_from_c4(note):
+def _interval_number_from_c4(note):
     diatonic_height_from_octaves = note.count("'") * len(DIATONIC_NOTES)
     return 1 + DIATONIC_NOTES.index(note[0]) + diatonic_height_from_octaves
 
 
-def interval_number_between(first_note, second_note):
+def _interval_number_between(first_note, second_note):
     sign = (
         pos
-        if interval_number_from_c4(first_note) <= interval_number_from_c4(second_note)
+        if _interval_number_from_c4(first_note) <= _interval_number_from_c4(second_note)
         else neg
     )
     return (
         sign(1)
-        + interval_number_from_c4(second_note)
-        - interval_number_from_c4(first_note)
+        + _interval_number_from_c4(second_note)
+        - _interval_number_from_c4(first_note)
     )
 
 
-def harmonic_distance_from_c4(note):
-    diatonic_distance = interval_number_from_c4(note) - 1
+def _harmonic_distance_from_c4(note):
+    diatonic_distance = _interval_number_from_c4(note) - 1
     harmonic_distance = DIATONIC_TO_CHROMATIC_DISTANCE[
         diatonic_distance % NUMBER_OF_DIATONIC_NOTES
     ]
@@ -80,29 +80,29 @@ def harmonic_distance_from_c4(note):
         harmonic_distance += (
             diatonic_distance // NUMBER_OF_DIATONIC_NOTES * NUMBER_OF_CHROMATIC_NOTES
         )
-    if is_sharp(note):
+    if _is_sharp(note):
         harmonic_distance += 1
-    elif is_flat(note):
+    elif _is_flat(note):
         harmonic_distance -= 1
     return harmonic_distance
 
 
 def harmonic_distance_between(first_note, second_note):
-    return harmonic_distance_from_c4(second_note) - harmonic_distance_from_c4(
+    return _harmonic_distance_from_c4(second_note) - _harmonic_distance_from_c4(
         first_note
     )
 
 
 def have_opposite_accidentals(first_note, second_note):
-    return (is_flat(first_note) and is_sharp(second_note)) or (
-        is_sharp(first_note) and is_flat(second_note)
+    return (_is_flat(first_note) and _is_sharp(second_note)) or (
+        _is_sharp(first_note) and _is_flat(second_note)
     )
 
 
 def interval_between(first_note, second_note):
-    interval_number = interval_number_between(first_note, second_note)
+    interval_number = _interval_number_between(first_note, second_note)
     harmonic_distance = harmonic_distance_between(first_note, second_note)
-    simple_interval_number = simplify_interval_number(abs(interval_number))
+    simple_interval_number = _simplify_interval_number(abs(interval_number))
     index = (
         12
         if harmonic_distance % 12 == 0
@@ -126,7 +126,7 @@ def interval_between(first_note, second_note):
     return f"{'-' if is_descending_interval else ''}{quality}{abs(interval_number)}"
 
 
-def simplify_interval_number(interval_number):
+def _simplify_interval_number(interval_number):
     """
     Transforms an interval number to a simple interval, meaning that if the
     interval number is a compound interval number, then transform it to its

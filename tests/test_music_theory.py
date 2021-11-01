@@ -1,12 +1,12 @@
 from pytest import mark
 from src.music_snippets_generator.music_theory import (
-    simplify_interval_number,
+    _simplify_interval_number,
     have_opposite_accidentals,
-    is_flat,
-    is_sharp,
-    interval_number_from_c4,
-    interval_number_between,
-    harmonic_distance_from_c4,
+    _is_flat,
+    _is_sharp,
+    _interval_number_from_c4,
+    _interval_number_between,
+    _harmonic_distance_from_c4,
     harmonic_distance_between,
     interval_between,
 )
@@ -25,7 +25,7 @@ from src.music_snippets_generator.music_theory import (
     ],
 )
 def test_is_flat(test_note, expected):
-    assert is_flat(test_note) == expected
+    assert _is_flat(test_note) == expected
 
 
 @mark.parametrize(
@@ -41,7 +41,7 @@ def test_is_flat(test_note, expected):
     ],
 )
 def test_is_sharp(test_note, expected):
-    assert is_sharp(test_note) == expected
+    assert _is_sharp(test_note) == expected
 
 
 @mark.parametrize(
@@ -76,7 +76,7 @@ def test_have_opposite_accidentals(test_note1, test_note2, expected):
     ],
 )
 def test_interval_number_from_c4(test_note, expected):
-    assert interval_number_from_c4(test_note) == expected
+    assert _interval_number_from_c4(test_note) == expected
 
 
 @mark.parametrize(
@@ -93,7 +93,7 @@ def test_interval_number_from_c4(test_note, expected):
     ],
 )
 def test_interval_number_between(test_note1, test_note2, expected):
-    assert interval_number_between(test_note1, test_note2) == expected
+    assert _interval_number_between(test_note1, test_note2) == expected
 
 
 @mark.parametrize(
@@ -112,7 +112,7 @@ def test_interval_number_between(test_note1, test_note2, expected):
     ],
 )
 def test_harmonic_distance_from_c4(test_note, expected):
-    assert harmonic_distance_from_c4(test_note) == expected
+    assert _harmonic_distance_from_c4(test_note) == expected
 
 
 @mark.parametrize(
@@ -168,4 +168,4 @@ def test_interval_between(test_note1, test_note2, expected):
     [(9, 2), (1, 1), (8, 8), (11, 4), (13, 6), (15, 8), (16, 2)],
 )
 def test_simplify_interval_number(note, expected):
-    assert simplify_interval_number(note) == expected
+    assert _simplify_interval_number(note) == expected
